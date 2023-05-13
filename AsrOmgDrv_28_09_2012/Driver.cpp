@@ -7,17 +7,17 @@
 #define DeviceName			L"\\Device\\AsrOmgDrv"
 
 typedef struct _IOCTL_ALLOCMEMORY {
-	ULONG NumberOfBytes;
-	ULONG PhysicalAddress;
-	PVOID VirtualAddress;
+	ULONG NumberOfBytes;			//Input
+	ULONG PhysicalAddress;			//Output
+	ULONGLONG VirtualAddress;		//Output
 }IOCTL_ALLOCMEMORY, * PIOCTL_ALLOCMEMORY;
 
 typedef struct _IOCTL_FREEMEMORY {
-	ULONGLONG NumberOfBytes;
-	PVOID BaseAddress;
+	ULONGLONG NumberOfBytes;		//Input
+	ULONGLONG BaseAddress;			//Input
 }IOCTL_FREEMEMORY, * PIOCTL_FREEMEMORY;
 typedef struct _IOCTL_RWCR {
-	ULONGLONG Type;
+	ULONGLONG Type;	
 	ULONGLONG Data;
 }IOCTL_RWCR, * PIOCTL_RWCR;
 typedef struct _IOCTL_INOUT {
@@ -31,7 +31,7 @@ typedef struct _IOCTL_INOUT {
 }IOCTL_INOUT, * PIOCTL_INOUT;
 
 typedef struct _IOCTL_PHYSMEM {
-	ULONGLONG PhysicalAddress;
+	ULARGE_INTEGER PhysicalAddress;
 	ULONG NumberOfValues;
 	ULONG ValueLength;//1-Byte, 2-Short, 4-Long
 	PVOID Buffer;
@@ -83,7 +83,7 @@ VOID CDriver::Unload()
 	}
 }
 
-PVOID CDriver::AllocateMemory(ULONG NumberOfBytes, PULONG PhysicalAddress)
+ULONGLONG CDriver::AllocateMemory(ULONG NumberOfBytes, PULONG PhysicalAddress)
 {
 	IOCTL_ALLOCMEMORY buffer;
 	buffer.NumberOfBytes = NumberOfBytes;
@@ -102,7 +102,7 @@ PVOID CDriver::AllocateMemory(ULONG NumberOfBytes, PULONG PhysicalAddress)
 
 	return buffer.VirtualAddress;
 }
-BOOLEAN CDriver::FreeMemory(PVOID BaseAddress, ULONG NumberOfBytes)
+BOOLEAN CDriver::FreeMemory(ULONGLONG BaseAddress, ULONG NumberOfBytes)
 {
 	IOCTL_FREEMEMORY buffer;
 	buffer.BaseAddress = BaseAddress;
@@ -247,80 +247,80 @@ BOOLEAN CDriver::OutDword(USHORT Port, ULONG Value)
 	return MyDeviceIoControl(DeviceHandle, 0x222824, &buffer, sizeof(buffer), &buffer, sizeof(buffer), NULL) == STATUS_SUCCESS;
 }
 
-BOOLEAN CDriver::WritePhysicalBytes(ULONG PhysicalAddress, PUCHAR Values, ULONG Count)
+BOOLEAN CDriver::WritePhysicalBytes(ULONGLONG PhysicalAddress, PUCHAR Values, ULONG Count)
 {
 	IOCTL_PHYSMEM buffer;
 	buffer.Buffer = Values;
 	buffer.ValueLength = 1;
 	buffer.NumberOfValues = Count;
-	buffer.PhysicalAddress = PhysicalAddress;
+	buffer.PhysicalAddress.QuadPart = PhysicalAddress;
 	return MyDeviceIoControl(DeviceHandle, 0x22280C, &buffer, sizeof(buffer), NULL, NULL, NULL) == STATUS_SUCCESS;
 }
-BOOLEAN CDriver::WritePhysicalUshorts(ULONG PhysicalAddress, PUSHORT Values, ULONG Count)
+BOOLEAN CDriver::WritePhysicalUshorts(ULONGLONG PhysicalAddress, PUSHORT Values, ULONG Count)
 {
 	IOCTL_PHYSMEM buffer;
 	buffer.Buffer = Values;
 	buffer.ValueLength = 2;
 	buffer.NumberOfValues = Count;
-	buffer.PhysicalAddress = PhysicalAddress;
+	buffer.PhysicalAddress.QuadPart = PhysicalAddress;
 	return MyDeviceIoControl(DeviceHandle, 0x22280C, &buffer, sizeof(buffer), NULL, NULL, NULL) == STATUS_SUCCESS;
 }
-BOOLEAN CDriver::WritePhysicalUlongs(ULONG PhysicalAddress, PULONG Values, ULONG Count)
+BOOLEAN CDriver::WritePhysicalUlongs(ULONGLONG PhysicalAddress, PULONG Values, ULONG Count)
 {
 	IOCTL_PHYSMEM buffer;
 	buffer.Buffer = Values;
 	buffer.ValueLength = 4;
 	buffer.NumberOfValues = Count;
-	buffer.PhysicalAddress = PhysicalAddress;
+	buffer.PhysicalAddress.QuadPart = PhysicalAddress;
 	return MyDeviceIoControl(DeviceHandle, 0x22280C, &buffer, sizeof(buffer), NULL, NULL, NULL) == STATUS_SUCCESS;
 }
 
-BOOLEAN CDriver::ReadPhysicalBytes(ULONG PhysicalAddress, PUCHAR Values, ULONG Count)
+BOOLEAN CDriver::ReadPhysicalBytes(ULONGLONG PhysicalAddress, PUCHAR Values, ULONG Count)
 {
 	IOCTL_PHYSMEM buffer;
 	buffer.Buffer = Values;
 	buffer.ValueLength = 1;
 	buffer.NumberOfValues = Count;
-	buffer.PhysicalAddress = PhysicalAddress;
+	buffer.PhysicalAddress.QuadPart = PhysicalAddress;
 	return MyDeviceIoControl(DeviceHandle, 0x222808, &buffer, sizeof(buffer), NULL, NULL, NULL) == STATUS_SUCCESS;
 }
-BOOLEAN CDriver::ReadPhysicalUshorts(ULONG PhysicalAddress, PUSHORT Values, ULONG Count)
+BOOLEAN CDriver::ReadPhysicalUshorts(ULONGLONG PhysicalAddress, PUSHORT Values, ULONG Count)
 {
 	IOCTL_PHYSMEM buffer;
 	buffer.Buffer = Values;
 	buffer.ValueLength = 2;
 	buffer.NumberOfValues = Count;
-	buffer.PhysicalAddress = PhysicalAddress;
+	buffer.PhysicalAddress.QuadPart = PhysicalAddress;
 	return MyDeviceIoControl(DeviceHandle, 0x222808, &buffer, sizeof(buffer), NULL, NULL, NULL) == STATUS_SUCCESS;
 }
-BOOLEAN CDriver::ReadPhysicalUlongs(ULONG PhysicalAddress, PULONG Values, ULONG Count)
+BOOLEAN CDriver::ReadPhysicalUlongs(ULONGLONG PhysicalAddress, PULONG Values, ULONG Count)
 {
 	IOCTL_PHYSMEM buffer;
 	buffer.Buffer = Values;
 	buffer.ValueLength = 4;
 	buffer.NumberOfValues = Count;
-	buffer.PhysicalAddress = PhysicalAddress;
+	buffer.PhysicalAddress.QuadPart = PhysicalAddress;
 	return MyDeviceIoControl(DeviceHandle, 0x222808, &buffer, sizeof(buffer), NULL, NULL, NULL) == STATUS_SUCCESS;
 }
 
-BOOLEAN CDriver::WritePhysicalByte(ULONG PhysicalAddress, UCHAR Value)
+BOOLEAN CDriver::WritePhysicalByte(ULONGLONG PhysicalAddress, UCHAR Value)
 {
 	return WritePhysicalBytes(PhysicalAddress, &Value, 1);
 }
-BOOLEAN CDriver::WritePhysicalUshort(ULONG PhysicalAddress, USHORT Value)
+BOOLEAN CDriver::WritePhysicalUshort(ULONGLONG PhysicalAddress, USHORT Value)
 {
 	return WritePhysicalUshorts(PhysicalAddress, &Value, 1);
 }
-BOOLEAN CDriver::WritePhysicalUlong(ULONG PhysicalAddress, ULONG Value)
+BOOLEAN CDriver::WritePhysicalUlong(ULONGLONG PhysicalAddress, ULONG Value)
 {
 	return ReadPhysicalUlongs(PhysicalAddress, &Value, 1);
 }
 
-BOOLEAN CDriver::WritePhysical(ULONG PhysicalAddress, PVOID Buffer, ULONG BufferSize)
+BOOLEAN CDriver::WritePhysical(ULONGLONG PhysicalAddress, PVOID Buffer, ULONG BufferSize)
 {
 	return WritePhysicalBytes(PhysicalAddress, (PUCHAR)Buffer, BufferSize);
 }
-BOOLEAN CDriver::ReadPhysical(ULONG PhysicalAddress, PVOID Buffer, ULONG BufferSize)
+BOOLEAN CDriver::ReadPhysical(ULONGLONG PhysicalAddress, PVOID Buffer, ULONG BufferSize)
 {
 	return ReadPhysicalBytes(PhysicalAddress, (PUCHAR)Buffer, BufferSize);
 }
