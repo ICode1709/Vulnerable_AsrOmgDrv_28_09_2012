@@ -15,10 +15,10 @@ void DriverTest(CDriver* driver)
     UCHAR Buffer[BufferSize] = { 0 };
 
     ULONG PhysicalAddress = 0;
-    if (PVOID VirtualAddress = driver->AllocateMemory(BufferSize, &PhysicalAddress))
+    if (ULONGLONG VirtualAddress = driver->AllocateMemory(BufferSize, &PhysicalAddress))
     {
         printf("PhysicalAddress = 0x%X\n", PhysicalAddress);
-        printf("VirtualAddress = 0x%p\n", VirtualAddress);
+        printf("VirtualAddress = 0x%I64X\n", VirtualAddress);
 
         if (driver->WritePhysical(PhysicalAddress, DriverTest, BufferSize))
         {
@@ -35,7 +35,7 @@ void DriverTest(CDriver* driver)
 
 int main()
 {
-    SetConsoleTitleW(L"[Vulnerable 28_09_2012] AsrOmgDrv");
+    SetConsoleTitleW(L"[Vulnerable 28.09.2012] AsrOmgDrv");
 
     CDriver driver;
     if (driver.Load())
