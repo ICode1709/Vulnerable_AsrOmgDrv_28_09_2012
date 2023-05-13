@@ -9,8 +9,8 @@ public:
 	VIRTUAL BOOLEAN Load();
 	VIRTUAL VOID Unload();
 
-	VIRTUAL PVOID AllocateMemory(ULONG NumberOfBytes, PULONG PhysicalAddress);
-	VIRTUAL BOOLEAN FreeMemory(PVOID BaseAddress, ULONG NumberOfBytes);
+	VIRTUAL ULONGLONG AllocateMemory(ULONG NumberOfBytes, PULONG PhysicalAddress);
+	VIRTUAL BOOLEAN FreeMemory(ULONGLONG BaseAddress, ULONG NumberOfBytes);
 
 	VIRTUAL ULONGLONG Rdtsc();
 	VIRTUAL ULONGLONG ReadPmc(ULONG Counter);
@@ -32,19 +32,19 @@ public:
 	VIRTUAL BOOLEAN InDword(USHORT Port, PULONG Value);
 	VIRTUAL BOOLEAN OutDword(USHORT Port, ULONG Value);
 
-	VIRTUAL BOOLEAN WritePhysicalBytes(ULONG PhysicalAddress, PUCHAR Values, ULONG Count);
-	VIRTUAL BOOLEAN WritePhysicalUshorts(ULONG PhysicalAddress, PUSHORT Values, ULONG Count);
-	VIRTUAL BOOLEAN WritePhysicalUlongs(ULONG PhysicalAddress, PULONG Values, ULONG Count);
-	VIRTUAL BOOLEAN ReadPhysicalBytes(ULONG PhysicalAddress, PUCHAR Values, ULONG Count);
-	VIRTUAL BOOLEAN ReadPhysicalUshorts(ULONG PhysicalAddress, PUSHORT Values, ULONG Count);
-	VIRTUAL BOOLEAN ReadPhysicalUlongs(ULONG PhysicalAddress, PULONG Values, ULONG Count);
+	VIRTUAL BOOLEAN WritePhysicalBytes(ULONGLONG PhysicalAddress, PUCHAR Values, ULONG Count);
+	VIRTUAL BOOLEAN WritePhysicalUshorts(ULONGLONG PhysicalAddress, PUSHORT Values, ULONG Count);
+	VIRTUAL BOOLEAN WritePhysicalUlongs(ULONGLONG PhysicalAddress, PULONG Values, ULONG Count);
+	VIRTUAL BOOLEAN ReadPhysicalBytes(ULONGLONG PhysicalAddress, PUCHAR Values, ULONG Count);
+	VIRTUAL BOOLEAN ReadPhysicalUshorts(ULONGLONG PhysicalAddress, PUSHORT Values, ULONG Count);
+	VIRTUAL BOOLEAN ReadPhysicalUlongs(ULONGLONG PhysicalAddress, PULONG Values, ULONG Count);
 
-	VIRTUAL BOOLEAN WritePhysicalByte(ULONG PhysicalAddress, UCHAR Value);
-	VIRTUAL BOOLEAN WritePhysicalUshort(ULONG PhysicalAddress, USHORT Value);
-	VIRTUAL BOOLEAN WritePhysicalUlong(ULONG PhysicalAddress, ULONG Value);
+	VIRTUAL BOOLEAN WritePhysicalByte(ULONGLONG PhysicalAddress, UCHAR Value);
+	VIRTUAL BOOLEAN WritePhysicalUshort(ULONGLONG PhysicalAddress, USHORT Value);
+	VIRTUAL BOOLEAN WritePhysicalUlong(ULONGLONG PhysicalAddress, ULONG Value);
 
-	VIRTUAL BOOLEAN WritePhysical(ULONG PhysicalAddress, PVOID Buffer, ULONG BufferSize);
-	VIRTUAL BOOLEAN ReadPhysical(ULONG PhysicalAddress, PVOID Buffer, ULONG BufferSize);
+	VIRTUAL BOOLEAN WritePhysical(ULONGLONG PhysicalAddress, PVOID Buffer, ULONG BufferSize);
+	VIRTUAL BOOLEAN ReadPhysical(ULONGLONG PhysicalAddress, PVOID Buffer, ULONG BufferSize);
 private:
 	HANDLE DeviceHandle;
 };
