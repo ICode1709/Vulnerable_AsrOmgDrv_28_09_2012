@@ -33,7 +33,7 @@ typedef struct _IOCTL_INOUT {
 typedef struct _IOCTL_PHYSMEM {
 	ULONGLONG PhysicalAddress;
 	ULONG NumberOfValues;
-	ULONG ValueLength;//1-Byte, 2-Hort, 4-Long
+	ULONG ValueLength;//1-Byte, 2-Short, 4-Long
 	PVOID Buffer;
 }IOCTL_PHYSMEM, * PIOCTL_PHYSMEM;
 
