@@ -3,18 +3,6 @@
 #include <iostream>
 #include <map>
 
-
-void DriverTestReadPhys(CDriver* driver)
-{
-    UCHAR Buffer[4096] = { 0 };
-    ULONG PhysicalAddress = 0;
-
-    if (PVOID VirtualAddress = driver->AllocateMemory(sizeof(Buffer), &PhysicalAddress))
-    {
-
-    }
-}
-
 void DriverTest(CDriver* driver)
 {
     printf("Irql = 0x%I64X\n", driver->KeGetCurrentIrql());
